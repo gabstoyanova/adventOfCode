@@ -17,16 +17,16 @@ public class Day1 extends Day {
   @Override
   public Object part1() {
     var input = readInputFile("src/adventOfCode2023/days/day1/input");
-    return "Part 1: " + input.mapToInt(Day1::calculateLineNumber).sum();
+    return "Part 1: " + input.mapToInt(Day1::calculateCalibrationValue).sum();
   }
 
   @Override
   public Object part2() {
     var input = readInputFile("src/adventOfCode2023/days/day1/input");
-    return "Part 2: " + input.map(Day1::convertLineToNumbers).mapToInt(Day1::calculateLineNumber).sum();
+    return "Part 2: " + input.map(Day1::convertLineToNumbers).mapToInt(Day1::calculateCalibrationValue).sum();
   }
 
-  public static int calculateLineNumber(String line) {
+  public static int calculateCalibrationValue(String line) {
     char first = 0;
     for (int i = 0; i < line.length(); i++) {
       if (!Character.isAlphabetic(line.charAt(i))) {
