@@ -10,25 +10,28 @@ public class Day2 extends Day {
   public static void main(String[] args) {
     Day2 day2 = new Day2();
     System.out.println(day2.part1());
-//    System.out.println(day2.part2());
+    System.out.println(day2.part2());
   }
 
   @Override
   public Object part1() {
     var input = readInputFile("src/adventOfCode2023/days/day2/input");
-    return input.filter(Day2::checkGameValidity).mapToInt(Day2::getGameNumber).sum();
+    assert input != null;
+    return input.filter(this::checkGameValidity).mapToInt(this::getGameNumber).sum();
   }
 
   @Override
   public Object part2() {
-    return null;
+    var input = readInputFile("src/adventOfCode2023/days/day2/input");
+    assert input != null;
+    return input.map(this::getFewestNumberOfCubes).mapToInt(this::getPowerOfGame).sum();
   }
 
-  public static int getGameNumber(String line) {
+  public int getGameNumber(String line) {
     return Integer.parseInt(line.split(": ")[0].replace("Game ", ""));
   }
 
-  public static boolean checkGameValidity(String line) {
+  public boolean checkGameValidity(String line) {
     boolean valid = true;
 
     String[] sets = line.split(";");
@@ -70,6 +73,38 @@ public class Day2 extends Day {
       }
     }
     return true;
+  }
+
+  public Map<Color, Integer> getFewestNumberOfCubes(String game) {
+    Map<Color, Integer> fewestNumberOfColor = new HashMap<>();
+    String[] sets = game.split(";");
+
+    for (String set : sets) {
+      String[] words = set.replace(",", "").split(" ");
+      Map<Color, Integer> countedCubesPerSetPart = countCubesByColor(words);
+
+      updateFewestNumberOfColorForGame(fewestNumberOfColor, countedCubesPerSetPart);
+    }
+    return fewestNumberOfColor;
+  }
+
+  Map<Color, Integer> updateFewestNumberOfColorForGame(Map<Color, Integer> previousGameSet, Map<Color, Integer> newGameSet) {
+    for (Map.Entry<Color, Integer> entry : newGameSet.entrySet()) {
+
+      if (previousGameSet.get(entry.getKey()) == null ||
+        entry.getValue() > previousGameSet.get(entry.getKey())) {
+        previousGameSet.put(entry.getKey(), entry.getValue());
+      }
+    }
+    return previousGameSet;
+  }
+
+  public int getPowerOfGame(Map<Color, Integer> getFewestNumberOfCubes) {
+    int result = 1;
+    for (Integer i : getFewestNumberOfCubes.values()) {
+      result *= i;
+    }
+    return result;
   }
 
 }
